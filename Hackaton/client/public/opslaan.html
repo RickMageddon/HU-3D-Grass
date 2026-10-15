@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kies op Maat-pagina's opslaan – Minoren in de buurt</title>
+<style>
+  :root { --bg:#f6f7fb; --card:#fff; --text:#171a2b; --muted:#5b6078; --primary:#4338ca; --border:#dde0ea; color-scheme: light dark; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0f1120; --card:#171a2e; --text:#eceefa; --muted:#a3a8c3; --primary:#818cf8; --border:#2d3250; } }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.55 system-ui, sans-serif; }
+  main { max-width:760px; margin:0 auto; padding:2rem 1rem 4rem; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.25rem 1.5rem; margin:1rem 0; }
+  h1 { font-size:1.8rem; margin:0 0 .5rem; } h2 { font-size:1.1rem; margin:0 0 .5rem; }
+  .bm { display:inline-block; padding:.7rem 1.1rem; border-radius:10px; background:var(--primary); color:#fff; font-weight:700; text-decoration:none; cursor:grab; }
+  code, kbd { background:rgba(127,127,127,.15); padding:.1em .4em; border-radius:6px; }
+  ol li { margin-bottom:.5rem; } .muted { color:var(--muted); font-size:.92rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Kies op Maat-pagina's opslaan</h1>
+  <p>Minoren in de buurt haalt zelf niets van kiesopmaat.nl op, omdat de site geautomatiseerde toegang blokkeert. Met deze bladwijzer sla jij de pagina's die je bekijkt met één klik op.</p>
+
+  <div class="card">
+    <h2>1. Zet de knop in je bladwijzerbalk</h2>
+    <p>Sleep deze knop naar je bladwijzerbalk (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> laat de balk zien):</p>
+    <p><a class="bm" id="bm" href="#" onclick="alert('Sleep deze knop naar je bladwijzerbalk; klikken op deze pagina doet niets.');return false;">Opslaan voor Minoren in de buurt</a></p>
+    <p class="muted">Lukt slepen niet? Maak dan zelf een bladwijzer aan en plak de code hieronder als adres (URL).</p>
+    <textarea id="code" readonly rows="4" style="width:100%;font:12px monospace" onclick="this.select()"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>2. Sla de pagina's op</h2>
+    <ol>
+      <li>Open <a href="https://www.kiesopmaat.nl/modules/" target="_blank" rel="noopener">kiesopmaat.nl/modules</a> en wacht tot je de minoren ziet.</li>
+      <li>Klik op <strong>Opslaan voor Minoren in de buurt</strong>. Er verschijnt een groene melding en er komt een bestand in je map <em>Downloads</em>.</li>
+      <li>Open elke minor die je volledig wilt meenemen en klik daar ook op de bladwijzer. Zonder eigen pagina zijn alleen de gegevens uit het overzicht bekend.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>3. Importeren</h2>
+    <p>Lees de bestanden in vanuit je Downloads-map en herstart de app:</p>
+    <p><code>npm run import -- ~/Downloads</code></p>
+    <p class="muted">Alleen bestanden van kiesopmaat.nl worden gelezen; andere bestanden in Downloads worden overgeslagen.</p>
+  </div>
+</main>
+<script>
+  fetch('/bookmarklet.js').then((r) => r.text()).then((src) => {
+    const body = src.replace(/^\s*\/\/.*$/gm, '').replace(/\n\s*/g, ' ').trim();
+    const href = 'javascript:' + encodeURIComponent(body);
+    document.getElementById('bm').href = href;
+    document.getElementById('bm').removeAttribute('onclick');
+    document.getElementById('bm').addEventListener('click', (e) => { e.preventDefault(); alert('Sleep deze knop naar je bladwijzerbalk; klikken op deze pagina doet niets.'); });
+    document.getElementById('code').value = href;
+  });
+</script>
+</body>
+</html>

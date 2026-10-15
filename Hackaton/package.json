@@ -1,0 +1,26 @@
+{
+  "name": "minoren-in-de-buurt",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Nederlandse spraakagent die hbo-studenten helpt passende minoren te vinden (data: Kies op Maat)",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,green \"npm:dev -w server\" \"npm:dev -w client\"",
+    "build": "npm run build -w server && npm run build -w client",
+    "start": "npm run start -w server",
+    "import": "npm run import -w server",
+    "test": "npm test -w server && npm test -w client",
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w client",
+    "e2e": "node e2e/voice-flow.mjs && node e2e/full-flow.mjs test-results",
+    "dev:testdata": "npm run import:testdata && MINORS_FILE=test/fixtures/minors.test.json npm run dev",
+    "import:testdata": "MINORS_FILE=test/fixtures/minors.test.json npm run import -- test/fixtures/raw",
+    "setup:speech": "npm run setup:speech -w server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5",
+    "playwright-core": "^1.56.1"
+  }
+}

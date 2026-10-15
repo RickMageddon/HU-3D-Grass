@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+server/data/raw/*
+!server/data/raw/.gitkeep
+test-results/
+playwright-report/
+# Geïmporteerde minorgegevens niet herpubliceren via git (zie README → Kies op Maat)
+server/data/minors.json
+server/test/fixtures/minors.test.json
+# Lokale spraakmodellen en Piper-binary (npm run setup:speech)
+server/speech/
