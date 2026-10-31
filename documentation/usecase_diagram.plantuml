@@ -1,0 +1,30 @@
+@startuml
+actor "Printfarm operator" as po
+actor Robotarm
+package Robotarmmanager{
+    usecase "Schone printplaat" as uc01
+    usecase "Printplaat verwijderen" as uc02
+}
+package Printfarmmanager{
+    usecase "Printopdracht ontvangen" as uc03
+    usecase "Printopdracht starten" as uc04
+}
+package Dashboard{
+    usecase "Printproces inzien" as uc05
+    usecase "Print pauzeren" as uc06
+    usecase "Print hervatten" as uc07
+}
+Printfarmmanager -down-> uc01
+Printfarmmanager -down-> uc02
+uc01 -down-> Robotarm
+uc02 -down-> Robotarm
+po -left-> uc03
+po -left-> uc04
+po -down-> uc05
+po -down-> uc06
+po -down-> uc07
+uc04 -> Robotarmmanager
+Printfarmmanager -> uc05
+uc06 -> Printfarmmanager
+uc07 -> Printfarmmanager
+@enduml
