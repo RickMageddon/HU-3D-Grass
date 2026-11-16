@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+
+# Vite build
+dist/
+vite.config.timestamp-*
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

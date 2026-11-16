@@ -1,0 +1,147 @@
+{
+  "info": {
+    "_postman_id": "atum3d-printfarm-backend-collection-v1",
+    "name": "Atum3D Print Farm Backend (fresh)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Fresh Postman collection with all endpoints and example bodies"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000" },
+    { "key": "auth_token", "value": "" },
+    { "key": "job_id", "value": "" },
+    { "key": "printer_id", "value": "" },
+    { "key": "notification_id", "value": "" },
+    { "key": "status", "value": "queued" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/signup", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["auth","signup"] }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["auth","login"] }
+          }
+        },
+        {
+          "name": "Get Users (admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }],
+            "url": { "raw": "{{base_url}}/auth/users", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["auth","users"] }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "Print Jobs",
+      "item": [
+        {
+          "name": "Upload Print Job (form + file)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": "path/to/your-printfile.zip" },
+                { "key": "title", "type": "text", "value": "Demo Print" },
+                { "key": "printerName", "type": "text", "value": "unassigned" },
+                { "key": "status", "type": "text", "value": "queued" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/print-jobs", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["print-jobs"] }
+          }
+        },
+        {
+          "name": "List Print Jobs",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }], "url": { "raw": "{{base_url}}/print-jobs", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["print-jobs"] } }
+        },
+        {
+          "name": "Get Print Job by ID",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }], "url": { "raw": "{{base_url}}/print-jobs/{{job_id}}", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["print-jobs","{{job_id}}"] } }
+        },
+        {
+          "name": "Get Print Jobs by Status",
+          "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }], "url": { "raw": "{{base_url}}/print-jobs/status/{{status}}", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["print-jobs","status","{{status}}"] } }
+        },
+        {
+          "name": "Update Print Job",
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{auth_token}}" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"printing\",\n  \"progress\": 42\n}" },
+            "url": { "raw": "{{base_url}}/print-jobs/{{job_id}}", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["print-jobs","{{job_id}}"] }
+          }
+        },
+        {
+          "name": "Delete Print Job",
+          "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }], "url": { "raw": "{{base_url}}/print-jobs/{{job_id}}", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["print-jobs","{{job_id}}"] } }
+        }
+      ]
+    },
+
+    {
+      "name": "Printers",
+      "item": [
+        { "name": "List Printers", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }], "url": { "raw": "{{base_url}}/printers", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["printers"] } } },
+        { "name": "Add Printer", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{auth_token}}" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Printer A\",\n  \"model\": \"AtumMini\",\n  \"ipAddress\": \"192.168.1.50\",\n  \"status\": \"idle\"\n}" }, "url": { "raw": "{{base_url}}/printers", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["printers"] } } },
+        { "name": "Update Printer", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{auth_token}}" }], "body": { "mode": "raw", "raw": "{\n  \"status\": \"idle\",\n  \"resinLevel\": 78\n}" }, "url": { "raw": "{{base_url}}/printers/{{printer_id}}", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["printers","{{printer_id}}"] } } },
+        { "name": "Delete Printer", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }], "url": { "raw": "{{base_url}}/printers/{{printer_id}}", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["printers","{{printer_id}}"] } } }
+      ]
+    },
+
+    {
+      "name": "Logs",
+      "item": [
+        { "name": "List Logs", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }], "url": { "raw": "{{base_url}}/logs", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["logs"] } } },
+        { "name": "Add Log", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{auth_token}}" }], "body": { "mode": "raw", "raw": "{\n  \"level\": \"info\",\n  \"source\": \"unit-test\",\n  \"message\": \"Test log entry\"\n}" }, "url": { "raw": "{{base_url}}/logs", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["logs"] } } },
+        { "name": "Clear Logs", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }], "url": { "raw": "{{base_url}}/logs", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["logs"] } } }
+      ]
+    },
+
+    {
+      "name": "Notifications",
+      "item": [
+        { "name": "List Notifications", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }], "url": { "raw": "{{base_url}}/notifications", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["notifications"] } } },
+        { "name": "Add Notification", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{auth_token}}" }], "body": { "mode": "raw", "raw": "{\n  \"title\": \"Low Resin\",\n  \"message\": \"Resin below threshold on Printer A\"\n}" }, "url": { "raw": "{{base_url}}/notifications", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["notifications"] } } },
+        { "name": "Mark Notification Read", "request": { "method": "PATCH", "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }], "url": { "raw": "{{base_url}}/notifications/{{notification_id}}/read", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["notifications","{{notification_id}}","read"] } } },
+        { "name": "Clear Notifications", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{auth_token}}" }], "url": { "raw": "{{base_url}}/notifications", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["notifications"] } } }
+      ]
+    },
+
+    {
+      "name": "Stats & Resin",
+      "item": [
+        { "name": "Monthly Stats", "request": { "method": "GET", "url": { "raw": "{{base_url}}/stats/monthly", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["stats","monthly"] } } },
+        { "name": "Resin Volumes", "request": { "method": "GET", "url": { "raw": "{{base_url}}/resin/volumes", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["resin","volumes"] } } }
+      ]
+    },
+
+    {
+      "name": "Service Endpoints",
+      "item": [
+        { "name": "Printer Logs (service)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"ip\": \"192.168.1.50\",\n  \"level\": \"info\",\n  \"message\": \"Printer heartbeat\"\n}" }, "url": { "raw": "{{base_url}}/printer-logs", "protocol": "http", "host": ["localhost"], "port": "3000", "path": ["printer-logs"] } } }
+      ]
+    }
+  ]
+}
