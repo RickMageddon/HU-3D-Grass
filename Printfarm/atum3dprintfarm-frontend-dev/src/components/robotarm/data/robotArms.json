@@ -1,0 +1,201 @@
+{
+    "robotArms": [
+        {
+            "id": 1,
+            "name": "Arm Alpha",
+            "brand": "Universal Robots",
+            "model": "UR5e",
+            "serialNumber": "UR5E-20231104",
+            "firmwareVersion": "5.15.2",
+            "ipAddress": "192.168.1.50",
+            "location": "Lab A",
+            "connectionStatus": "connected",
+            "operationalStatus": "active",
+            "lastSeenAt": "2026-11-18T10:42:00Z",
+            "createdAt": "2026-11-01T09:00:00Z",
+            "updatedAt": "2026-11-18T10:42:00Z"
+        }
+    ],
+    "printers": [
+        {
+            "id": 1,
+            "name": "Printer 1",
+            "model": "Formlabs Form 3",
+            "status": "printing",
+            "location": "Lab A"
+        },
+        {
+            "id": 2,
+            "name": "Printer 2",
+            "model": "Formlabs Form 3",
+            "status": "idle",
+            "location": "Lab A"
+        },
+        {
+            "id": 3,
+            "name": "Printer 3",
+            "model": "Elegoo Saturn 3",
+            "status": "printing",
+            "location": "Lab A"
+        },
+        {
+            "id": 5,
+            "name": "Printer 5",
+            "model": "Anycubic Photon M5s",
+            "status": "error",
+            "location": "Lab B"
+        },
+        {
+            "id": 6,
+            "name": "Printer 6",
+            "model": "Anycubic Photon M5s",
+            "status": "idle",
+            "location": "Lab B"
+        }
+    ],
+    "printJobs": [
+        {
+            "id": 5,
+            "printerId": 2,
+            "userId": 1,
+            "fileName": "miniatuur_toren.stl",
+            "filePath": "uploads/miniatuur_toren.stl",
+            "fileSize": "55.3 MB",
+            "status": "completed",
+            "progress": 100,
+            "timeRemaining": "0m",
+            "timeElapsed": "4h 05m",
+            "startedAt": "2026-11-18T01:30:00Z",
+            "completedAt": "2026-11-18T05:35:00Z",
+            "queuePosition": null,
+            "estimatedTime": "4h 00m",
+            "material": "Grey",
+            "currentLayer": 1840,
+            "totalLayers": 1840,
+            "volume": 112.4,
+            "createdAt": "2026-11-18T01:25:00Z",
+            "updatedAt": "2026-11-18T05:35:00Z"
+        },
+        {
+            "id": 6,
+            "printerId": 6,
+            "userId": 1,
+            "fileName": "kalibratie_kubus.stl",
+            "filePath": "uploads/kalibratie_kubus.stl",
+            "fileSize": "1.2 MB",
+            "status": "completed",
+            "progress": 100,
+            "timeRemaining": "0m",
+            "timeElapsed": "0h 48m",
+            "startedAt": "2026-11-18T08:10:00Z",
+            "completedAt": "2026-11-18T08:58:00Z",
+            "queuePosition": null,
+            "estimatedTime": "0h 45m",
+            "material": "Black",
+            "currentLayer": 400,
+            "totalLayers": 400,
+            "volume": 8.0,
+            "createdAt": "2026-11-18T08:05:00Z",
+            "updatedAt": "2026-11-18T08:58:00Z"
+        },
+        {
+            "id": 7,
+            "printerId": 1,
+            "userId": 1,
+            "fileName": "prototype_klem.stl",
+            "filePath": "uploads/prototype_klem.stl",
+            "fileSize": "14.7 MB",
+            "status": "completed",
+            "progress": 100,
+            "timeRemaining": "0m",
+            "timeElapsed": "2h 31m",
+            "startedAt": "2026-11-17T21:00:00Z",
+            "completedAt": "2026-11-17T23:31:00Z",
+            "queuePosition": null,
+            "estimatedTime": "2h 30m",
+            "material": "Clear",
+            "currentLayer": 1020,
+            "totalLayers": 1020,
+            "volume": 36.9,
+            "createdAt": "2026-11-17T20:55:00Z",
+            "updatedAt": "2026-11-17T23:31:00Z"
+        }
+    ],
+    "robotArmQueue": [
+        {
+            "id": 1,
+            "robotArmId": 1,
+            "printJobId": 7,
+            "printerId": 1,
+            "taskType": "pick_and_place",
+            "status": "completed",
+            "priority": "normal",
+            "quantity": 1,
+            "estimatedDuration": 240,
+            "startedAt": "2026-11-18T07:00:00Z",
+            "completedAt": "2026-11-18T07:04:10Z",
+            "createdAt": "2026-11-17T23:31:00Z",
+            "updatedAt": "2026-11-18T07:04:10Z"
+        },
+        {
+            "id": 2,
+            "robotArmId": 1,
+            "printJobId": 5,
+            "printerId": 2,
+            "taskType": "pick_and_place",
+            "status": "active",
+            "priority": "normal",
+            "quantity": 1,
+            "estimatedDuration": 300,
+            "startedAt": "2026-11-18T10:40:00Z",
+            "completedAt": null,
+            "createdAt": "2026-11-18T05:35:00Z",
+            "updatedAt": "2026-11-18T10:40:00Z"
+        },
+        {
+            "id": 3,
+            "robotArmId": 1,
+            "printJobId": null,
+            "printerId": 5,
+            "taskType": "resin_cartridge_replace",
+            "status": "queued",
+            "priority": "high",
+            "quantity": 1,
+            "estimatedDuration": 420,
+            "startedAt": null,
+            "completedAt": null,
+            "createdAt": "2026-11-18T09:15:00Z",
+            "updatedAt": "2026-11-18T09:15:00Z"
+        },
+        {
+            "id": 4,
+            "robotArmId": 1,
+            "printJobId": 6,
+            "printerId": 6,
+            "taskType": "pick_and_place",
+            "status": "queued",
+            "priority": "normal",
+            "quantity": 1,
+            "estimatedDuration": 240,
+            "startedAt": null,
+            "completedAt": null,
+            "createdAt": "2026-11-18T08:58:00Z",
+            "updatedAt": "2026-11-18T08:58:00Z"
+        },
+        {
+            "id": 5,
+            "robotArmId": 1,
+            "printJobId": null,
+            "printerId": 2,
+            "taskType": "build_platform_swap",
+            "status": "queued",
+            "priority": "low",
+            "quantity": 1,
+            "estimatedDuration": 180,
+            "startedAt": null,
+            "completedAt": null,
+            "createdAt": "2026-11-18T10:40:00Z",
+            "updatedAt": "2026-11-18T10:40:00Z"
+        }
+    ]
+}

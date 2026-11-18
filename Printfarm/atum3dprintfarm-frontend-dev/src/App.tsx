@@ -16,15 +16,16 @@ import { API_BASE_URL } from "./lib/api";
 type NotifType = "resin-low" | "printer-error" | "print-finished" | "print-started" | "warning" | "info";
 
 const toastConfig: Record<NotifType, { icon: any; iconColor: string; iconBg: string }> = {
-  "resin-low":      { icon: Droplet,       iconColor: "text-amber-600",   iconBg: "bg-amber-100" },
-  "printer-error":  { icon: XCircle,       iconColor: "text-red-600",     iconBg: "bg-red-100" },
-  "print-finished": { icon: CheckCircle2,  iconColor: "text-emerald-600", iconBg: "bg-emerald-100" },
-  "print-started":  { icon: PlayCircle,    iconColor: "text-blue-600",    iconBg: "bg-blue-100" },
-  "warning":        { icon: AlertTriangle, iconColor: "text-orange-600",  iconBg: "bg-orange-100" },
-  "info":           { icon: Bell,          iconColor: "text-slate-500",   iconBg: "bg-slate-100" },
+  "resin-low": { icon: Droplet, iconColor: "text-amber-600", iconBg: "bg-amber-100" },
+  "printer-error": { icon: XCircle, iconColor: "text-red-600", iconBg: "bg-red-100" },
+  "print-finished": { icon: CheckCircle2, iconColor: "text-emerald-600", iconBg: "bg-emerald-100" },
+  "print-started": { icon: PlayCircle, iconColor: "text-blue-600", iconBg: "bg-blue-100" },
+  "warning": { icon: AlertTriangle, iconColor: "text-orange-600", iconBg: "bg-orange-100" },
+  "info": { icon: Bell, iconColor: "text-slate-500", iconBg: "bg-slate-100" },
 };
 import { CameraView } from "./components/CameraView";
 import { SensorsView } from "./components/SensorsView";
+import { RobotArmView } from "./components/robotarm/pages/RobotArmView";
 
 interface User {
   name: string;
@@ -57,6 +58,8 @@ export default function App() {
         return <CameraView />;
       case "sensors":
         return <SensorsView />;
+      case "robotarm":
+        return <RobotArmView />;
       default:
         return <HomeView />;
     }
@@ -93,6 +96,11 @@ export default function App() {
         return {
           title: "Activity Log",
           subtitle: "View all system activities and events"
+        };
+      case "robotarm":
+        return {
+          title: "Robot Arm",
+          subtitle: "Manage and monitor all robot arms in the print farm"
         };
       default:
         return {};
