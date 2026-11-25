@@ -1,5 +1,12 @@
 import type { ReactNode } from "react";
-import type { Badge, QueueEntry, QueueRow, RobotArmConnectionStatus, RobotArmQueueItem } from "./robotArm";
+import type {
+    Badge,
+    PrinterSummary,
+    QueueEntry,
+    QueueRow,
+    RobotArmConnectionStatus,
+    RobotArmQueueItem,
+} from "./robotArm";
 
 export interface StatCardProps {
     icon: ReactNode;
@@ -47,6 +54,11 @@ export interface CurrentTaskDetailsProps {
 export interface RobotArmViewProps {
     armId: number;
     onBack: () => void;
+}
+
+export interface AddTaskDialogProps {
+    armName: string;
+    printers: PrinterSummary[];
 }
 
 export interface RobotArmHomepageProps {

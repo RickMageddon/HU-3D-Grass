@@ -1,10 +1,12 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Activity, Bot, ChevronLeft, Cpu, Pause, Square } from "lucide-react";
 import { BadgeLabel, ConnectionLabel, useTaskProgress } from "../components/RobotArmBadges";
+import { AddTaskDialog } from "../components/AddTaskDialog";
+import { ArmQueueTable } from "../components/QueueTable";
 import { Button } from "../../ui/button";
 import { Card } from "../../ui/card";
 import { Progress } from "../../ui/progress";
-import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import {
     buildRow,
     data,
@@ -15,6 +17,7 @@ import {
     queueStatusConfig,
     statusConfig,
 } from "../lib/robotArmData";
+import type { QueueRow } from "../types/robotArm";
 import type {
     CurrentTaskCardProps,
     CurrentTaskDetailsProps,
@@ -22,6 +25,13 @@ import type {
     InfoTileProps,
     RobotArmViewProps,
 } from "../types/robotArmProps";
+
+function tabTriggerClass(active: boolean): string {
+    const base = "cursor-pointer px-3 transition-colors";
+    return active
+        ? `${base} bg-[var(--brand-blue)] text-white shadow-sm`
+        : `${base} text-slate-600 hover:bg-slate-100 hover:text-[var(--brand-blue)]`;
+}
 
 function InfoRow({ label, children }: InfoRowProps) {
     return (
@@ -87,6 +97,7 @@ export const RobotArmView = ({ armId, onBack }: RobotArmViewProps) => {
         const arm = data.robotArms.find((a) => a.id === armId);
         return arm ? buildRow(arm) : undefined;
     }, [armId]);
+    const [activeTab, setActiveTab] = useState("overview");
 
     const backLink = (
         <button
@@ -108,7 +119,11 @@ export const RobotArmView = ({ armId, onBack }: RobotArmViewProps) => {
         );
     }
 
-    const { arm, currentTask } = row;
+    const { arm, currentTask, upcoming } = row;
+    const queueRows: QueueRow[] = [...(currentTask ? [currentTask] : []), ...upcoming].map((entry) => ({
+        ...entry,
+        id: entry.item.id,
+    }));
 
     return (
         <div>
@@ -141,45 +156,64 @@ export const RobotArmView = ({ armId, onBack }: RobotArmViewProps) => {
                 </div>
             </div>
 
-            <Tabs defaultValue="overview" className="mb-6">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="gap-6">
                 <TabsList>
-                    <TabsTrigger value="overview">Overzicht</TabsTrigger>
-                    <TabsTrigger value="queue" disabled>
-                        Taakwachtrij
+                    <TabsTrigger value="overview" className={tabTriggerClass(activeTab === "overview")}>
+                        Overzicht
                     </TabsTrigger>
-                    <TabsTrigger value="history" disabled>
+                    <TabsTrigger value="queue" className={tabTriggerClass(activeTab === "queue")}>
+                        Taakwachtrij ({queueRows.length})
+                    </TabsTrigger>
+                    <TabsTrigger value="history" className={tabTriggerClass(false)} disabled>
                         Taakgeschiedenis
                     </TabsTrigger>
-                    <TabsTrigger value="activity" disabled>
+                    <TabsTrigger value="activity" className={tabTriggerClass(false)} disabled>
                         Activiteitenlog
                     </TabsTrigger>
                 </TabsList>
-            </Tabs>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card className="p-6">
-                    <h3 className="flex items-center gap-2 text-slate-900">
-                        <Cpu className="w-4 h-4 text-[var(--brand-blue)]" />
-                        Robotarm informatie
-                    </h3>
-                    <dl>
-                        <InfoRow label="Naam">{arm.name}</InfoRow>
-                        <InfoRow label="ID">{arm.id}</InfoRow>
-                        <InfoRow label="Merk">{arm.brand}</InfoRow>
-                        <InfoRow label="Model">{arm.model}</InfoRow>
-                        <InfoRow label="Serienummer">{arm.serialNumber}</InfoRow>
-                        <InfoRow label="Firmware">{arm.firmwareVersion}</InfoRow>
-                        <InfoRow label="IP-adres">{arm.ipAddress}</InfoRow>
-                        <InfoRow label="Locatie">{arm.location}</InfoRow>
-                        <InfoRow label="Toegevoegd op">{formatDate(arm.createdAt)}</InfoRow>
-                        <InfoRow label="Verbinding">
-                            <ConnectionLabel connection={arm.connectionStatus} />
-                        </InfoRow>
-                        <InfoRow label="Gekoppelde printer">{currentTask?.printer?.name ?? "—"}</InfoRow>
-                    </dl>
-                </Card>
-                <CurrentTaskCard task={currentTask} />
-            </div>
+                <TabsContent value="overview">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <Card className="p-6">
+                            <h3 className="flex items-center gap-2 text-slate-900">
+                                <Cpu className="w-4 h-4 text-[var(--brand-blue)]" />
+                                Robotarm informatie
+                            </h3>
+                            <dl>
+                                <InfoRow label="Naam">{arm.name}</InfoRow>
+                                <InfoRow label="ID">{arm.id}</InfoRow>
+                                <InfoRow label="Merk">{arm.brand}</InfoRow>
+                                <InfoRow label="Model">{arm.model}</InfoRow>
+                                <InfoRow label="Serienummer">{arm.serialNumber}</InfoRow>
+                                <InfoRow label="Firmware">{arm.firmwareVersion}</InfoRow>
+                                <InfoRow label="IP-adres">{arm.ipAddress}</InfoRow>
+                                <InfoRow label="Locatie">{arm.location}</InfoRow>
+                                <InfoRow label="Toegevoegd op">{formatDate(arm.createdAt)}</InfoRow>
+                                <InfoRow label="Verbinding">
+                                    <ConnectionLabel connection={arm.connectionStatus} />
+                                </InfoRow>
+                                <InfoRow label="Gekoppelde printer">{currentTask?.printer?.name ?? "—"}</InfoRow>
+                            </dl>
+                        </Card>
+                        <CurrentTaskCard task={currentTask} />
+                    </div>
+                </TabsContent>
+
+                <TabsContent value="queue">
+                    <Card className="p-6">
+                        <div className="flex items-start justify-between gap-4 mb-2">
+                            <div>
+                                <h3 className="text-lg text-slate-900">Taakwachtrij</h3>
+                                <p className="text-sm text-slate-500">
+                                    De volgorde wordt automatisch bepaald op basis van prioriteit.
+                                </p>
+                            </div>
+                            <AddTaskDialog armName={arm.name} printers={data.printers} />
+                        </div>
+                        <ArmQueueTable rows={queueRows} emptyText="Geen taken in de wachtrij" />
+                    </Card>
+                </TabsContent>
+            </Tabs>
         </div>
     );
 };
