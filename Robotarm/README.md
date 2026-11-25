@@ -186,8 +186,8 @@ make them valid).
 | 1 | `PI_PING` | no motion, test only |
 | 2 | `TEST` | colleague's test: one Cartesian point |
 | 3 | `CLAUDE_J6` | old J6 test; first swings to the 2026-11-04 pose, `UT : 1` (expect `INTP-251`) |
-| 4 | `PRINTER1` | **filler** (`PRINTER1.LS`): only J1 → 50°, other joints stay; replace with taught points |
-| 5 | `PRINTER2` | **filler** (`PRINTER2.LS`): only J1 → 130°, other joints stay; replace with taught points |
+| 4 | `PRINTER1` | **filler** (`PRINTER1.LS`): only J1 → 50°, other joints stay, 30%; replace with taught points |
+| 5 | `PRINTER2` | **filler** (`PRINTER2.LS`): only J1 → 130°, other joints stay, 30%; replace with taught points |
 | 6 | `PRINTER3` | go to printer 3 |
 | 7 | `SHELVE` | go to the shelf |
 | 9 | `PI_MOVE` | used by `fanuc.py move/jog/goto` |
