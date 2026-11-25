@@ -9,6 +9,7 @@ KCL refuses RUN (HOST-238 Protected KCL command), hence the register handshake.
 Run `python3 fanuc.py -h` for the commands.
 """
 import argparse
+import http.client
 import json
 import os
 import re
@@ -34,9 +35,16 @@ JOINT_LIMITS = [(-170, 170), (-90, 160), (-170, 285), (-200, 200), (-140, 140), 
 MAX_SPEED = 30  # percent; T1 caps real speed at 250 mm/s regardless
 
 
-def _get(path: str, timeout: float = 5) -> str:
-    with urllib.request.urlopen(f"http://{ROBOT}{path}", timeout=timeout) as r:
-        return re.sub(r"<[^>]*>", "", r.read().decode("latin-1"))
+def _get(path: str, timeout: float = 5, tries: int = 3) -> str:
+    # Retries are safe: every request is a read or an idempotent register write.
+    for attempt in range(tries):
+        try:
+            with urllib.request.urlopen(f"http://{ROBOT}{path}", timeout=timeout) as r:
+                return re.sub(r"<[^>]*>", "", r.read().decode("latin-1"))
+        except (OSError, http.client.HTTPException):
+            if attempt == tries - 1:
+                raise
+            time.sleep(0.5)
 
 
 def kcl(command: str) -> str:
