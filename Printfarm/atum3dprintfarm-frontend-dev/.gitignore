@@ -3,6 +3,7 @@ node_modules/
 
 # Vite build
 dist/
+build/
 vite.config.timestamp-*
 
 # Local env files

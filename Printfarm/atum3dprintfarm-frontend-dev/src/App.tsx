@@ -25,6 +25,7 @@ const toastConfig: Record<NotifType, { icon: any; iconColor: string; iconBg: str
 };
 import { CameraView } from "./components/CameraView";
 import { SensorsView } from "./components/SensorsView";
+import { RobotArmHomepage } from "./components/robotarm/pages/RobotArmHomepage";
 import { RobotArmView } from "./components/robotarm/pages/RobotArmView";
 
 interface User {
@@ -39,6 +40,7 @@ export default function App() {
   const [loginDialogOpen, setLoginDialogOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [selectedRobotArmId, setSelectedRobotArmId] = useState<number | null>(null);
 
   const renderView = () => {
     switch (activeView) {
@@ -59,7 +61,11 @@ export default function App() {
       case "sensors":
         return <SensorsView />;
       case "robotarm":
-        return <RobotArmView />;
+        return selectedRobotArmId !== null ? (
+          <RobotArmView armId={selectedRobotArmId} onBack={() => setSelectedRobotArmId(null)} />
+        ) : (
+          <RobotArmHomepage onSelectArm={setSelectedRobotArmId} />
+        );
       default:
         return <HomeView />;
     }
@@ -144,6 +150,7 @@ export default function App() {
 
   const handleNavigate = (view: string) => {
     setActiveView(view);
+    setSelectedRobotArmId(null); // Back to the robot arm homepage when navigating
     setMobileMenuOpen(false); // Close mobile menu on navigation
   };
 
