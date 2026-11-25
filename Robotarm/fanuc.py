@@ -22,7 +22,8 @@ ROBOT = os.environ.get("FANUC_IP", "10.0.6.10")
 POSES_FILE = Path(__file__).with_name("poses.json")
 REQ, BUSY = 100, 101  # R[100] = requested program, R[101] = program running
 # Must match the IF lines in PI_DISP.LS.
-PROGRAMS = {"PI_PING": 1, "TEST": 2, "CLAUDE_J6": 3, "PI_MOVE": 9}
+PROGRAMS = {"PI_PING": 1, "TEST": 2, "CLAUDE_J6": 3,
+            "PRINTER1": 4, "PRINTER2": 5, "PRINTER3": 6, "SHELVE": 7, "PI_MOVE": 9}
 MOVE_SPEED, MOVE_JOINTS = 110, 111  # PI_MOVE reads speed % from R[110], J1..J6 from R[111..116]
 
 # Our own joint limits in degrees (J1..J6), checked before every move() call.

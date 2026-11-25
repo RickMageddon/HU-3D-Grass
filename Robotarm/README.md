@@ -176,24 +176,71 @@ POSN). Keep `JOINT_LIMITS` equal to or tighter than the controller.
 After changing `JOINT_LIMITS`, run `python3 test_fanuc.py` (adjust the test values if your limits
 make them valid).
 
+## Program numbers
+
+| Number | Program | Note |
+|---|---|---|
+| 1 | `PI_PING` | no motion, test only |
+| 2 | `TEST` | colleague's test: one Cartesian point |
+| 3 | `CLAUDE_J6` | old J6 test; first swings to the 2026-11-04 pose, `UT : 1` (expect `INTP-251`) |
+| 4 | `PRINTER1` | go to printer 1 (teach on the pendant) |
+| 5 | `PRINTER2` | go to printer 2 |
+| 6 | `PRINTER3` | go to printer 3 |
+| 7 | `SHELVE` | go to the shelf |
+| 9 | `PI_MOVE` | used by `fanuc.py move/jog/goto` |
+
+`python3 fanuc.py run PRINTER2` → R[100] = 5 → `PI_DISP` runs `CALL PRINTER2`.
+
+### Teaching PRINTER1..3 and SHELVE on the pendant
+
+Do this in T1 with a low override, for each of `PRINTER1`, `PRINTER2`, `PRINTER3`, `SHELVE`:
+
+1. **FCTN → 1 ABORT (ALL)**, then **SELECT → F2 CREATE**. Type the name with the
+   function keys (F1..F5 choose letters/words), **ENTER**. The program opens in the editor.
+2. **Jog** the arm (COORD → JOINT, deadman + SHIFT + jog keys) to a **safe approach point**
+   above or in front of the printer.
+3. **SHIFT + F1 (POINT)** → this records `J P[1] 100% FINE` at the current position.
+   Move the cursor onto `100%`, type a lower speed (e.g. `20`), **ENTER**.
+4. Jog to the actual target and **SHIFT + F1** again → `P[2]`. Add more points if the path
+   needs them (e.g. back to the approach point at the end).
+5. Test it: cursor on line 1, deadman, **SHIFT + FWD** (runs all lines while you hold SHIFT),
+   or **STEP** first to go line by line.
+
+Tips:
+- Teach all four programs from/to the **same safe "home" point** (start and end each program
+  there). Then it doesn't matter which program ran before: every route starts from the same
+  place, and the absolute points never cause unexpected swings.
+- Points taught on the pendant automatically get the right tool frame (`UT`), so no
+  `INTP-251`.
+- Gripper or other I/O later: add `DO[n]=ON/OFF` lines between the points.
+
+When all four exist on the controller: **FCTN → ABORT (ALL)**, upload the new
+`PI_DISP.LS` (`curl -T PI_DISP.LS ftp://10.0.6.10/`), check `python3 fanuc.py alarms`
+for `ASBN` errors, start `PI_DISP` again and test with `python3 fanuc.py run PRINTER1`.
+
+Alternative without controller programs: jog to each spot and `python3 fanuc.py save printer1`,
+then `python3 fanuc.py goto printer1`. That is a single straight joint move from wherever the arm
+is, so it has no approach points; fine for testing, but programs on the controller are safer for
+the real routes.
+
 ## Adding a program that the Pi can start
 
-Example: a program `PAKOP` that the Pi should start as number 4.
+Example: a program `PAKOP` that the Pi should start as number 8.
 
 1. **Make the program** on the pendant (SELECT → F2 CREATE), or as an `.LS` file (see below)
    and upload it: `curl -T PAKOP.LS ftp://10.0.6.10/`.
 2. **Add it to `PI_DISP.LS`**, above `R[101]=0`:
    ```
-     12:  IF R[101]=4,CALL PAKOP ;
+     16:  IF R[101]=8,CALL PAKOP ;
    ```
    Renumber the lines after it (the numbers in front of `:` must be consecutive).
 3. **Upload `PI_DISP.LS` again**: abort `PI_DISP` on the pendant first (FCTN → 1 ABORT (ALL)),
    then `curl -T PI_DISP.LS ftp://10.0.6.10/`, then `python3 fanuc.py alarms` to check for errors.
-4. **Add it to `fanuc.py`**: in `PROGRAMS`, `"PAKOP": 4`.
+4. **Add it to `fanuc.py`**: in `PROGRAMS`, `"PAKOP": 8`.
 5. Start `PI_DISP` again and test: `python3 fanuc.py run PAKOP`.
 
-Numbers 1, 2, 3 and 9 are taken (`PI_PING`, `TEST`, `CLAUDE_J6`, `PI_MOVE`). Use numbers
-greater than 0; 0 means "nothing".
+Numbers 1–7 and 9 are taken (see "Program numbers"); use 8 or 10 and up. Never use 0: it
+means "nothing".
 
 ## Writing `.LS` programs
 
