@@ -288,8 +288,11 @@ What we learned:
   pose. For moves "from where the arm is now", use `fanuc.py jog`/`move` instead.
 - A program without motion: `DEFAULT_GROUP = *,*,*,*,*;` (like `PI_PING`).
 - `J PR[1] R[110]% FINE` (speed from a register) works on this firmware (V7.70P/39).
-- Replacing an existing program: abort it first. (Not tested what happens if you upload
-  over a running program; aborting first is the safe choice.)
+- Replacing an existing program: **abort it and select another program** (e.g. SELECT →
+  `PI_PING`) first. If it is still selected on the pendant, the upload fails with
+  `MEMO-015 Program already exists` / `ASBN-008` (seen 2026-11-25 with `PI_DISP`).
+- A `CALL` to a program that does not exist yet loads fine (`PI_DISP` calls `PRINTER3` and
+  `SHELVE` before they exist); it only fails when that line is actually executed.
 
 ## Troubleshooting
 
@@ -302,4 +305,5 @@ What we learned:
 | `SRVO-003 Deadman switch released` | Normal when nobody is holding the deadman. |
 | `timed out` / no connection | Laptop not on 10.0.6.x (`ip -br addr`), cable, or a different controller IP. |
 | Traffic goes over WiFi | No 10.0.6.x address on the Ethernet adapter: `ip route get 10.0.6.10` must show the Ethernet adapter. |
+| Upload fails: `MEMO-015 Program already exists` | The program is still selected on the pendant: ABORT (ALL), SELECT another program, upload again. |
 | `INTP-251` / `INTP-253` | Tool frame mismatch, see "Writing `.LS` programs". |
