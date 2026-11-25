@@ -80,3 +80,31 @@ export interface RobotArmData {
     printJobs: PrintJob[];
     robotArmQueue: RobotArmQueueItem[];
 }
+
+export interface Badge {
+    label: string;
+    color: string;
+    bg: string;
+    dot: string;
+}
+
+export interface QueueEntry {
+    item: RobotArmQueueItem;
+    job: PrintJob | undefined;
+    printer: PrinterSummary | undefined;
+}
+
+export interface QueueRow extends QueueEntry {
+    id: number;
+    armName?: string;
+}
+
+export interface ArmRow {
+    id: number;
+    arm: RobotArm;
+    currentTask: QueueEntry | undefined;
+    upcoming: QueueEntry[];
+    history: QueueEntry[];
+    doneCount: number;
+    totalCount: number;
+}

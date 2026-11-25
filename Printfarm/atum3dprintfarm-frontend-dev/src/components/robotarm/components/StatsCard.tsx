@@ -1,11 +1,5 @@
 import { Card } from "../../ui/card";
-
-interface StatCardProps {
-    icon: React.ReactNode;
-    color: string;
-    title: string;
-    value: string;
-}
+import type { StatCardProps } from "../types/robotArmProps";
 
 export default function StatsCard({ icon, color, title, value }: StatCardProps) {
     return (
