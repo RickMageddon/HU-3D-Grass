@@ -47,6 +47,7 @@ Why this way: on this controller, starting programs over the network is blocked.
 | R[110] | speed % for `PI_MOVE` | Pi |
 | R[111]..R[116] | target angles J1..J6 in degrees for `PI_MOVE` | Pi |
 | PR[1] | used internally by `PI_MOVE` | `PI_MOVE` |
+| PR[2] | used by the `PRINTER1`/`PRINTER2` fillers | fillers |
 
 Keep these registers free in other programs.
 
@@ -94,6 +95,8 @@ Upload once (already done on 2026-11-25):
 curl -T PI_DISP.LS ftp://10.0.6.10/
 curl -T PI_MOVE.LS ftp://10.0.6.10/
 curl -T PI_PING.LS ftp://10.0.6.10/
+curl -T PRINTER1.LS ftp://10.0.6.10/   # fillers; upload before PI_DISP.LS
+curl -T PRINTER2.LS ftp://10.0.6.10/
 ```
 
 Check with `python3 fanuc.py programs` and `python3 fanuc.py alarms` (no `ASBN` errors).
@@ -183,8 +186,8 @@ make them valid).
 | 1 | `PI_PING` | no motion, test only |
 | 2 | `TEST` | colleague's test: one Cartesian point |
 | 3 | `CLAUDE_J6` | old J6 test; first swings to the 2026-11-04 pose, `UT : 1` (expect `INTP-251`) |
-| 4 | `PRINTER1` | go to printer 1 (teach on the pendant) |
-| 5 | `PRINTER2` | go to printer 2 |
+| 4 | `PRINTER1` | **filler** (`PRINTER1.LS`): only J1 → 50°, other joints stay; replace with taught points |
+| 5 | `PRINTER2` | **filler** (`PRINTER2.LS`): only J1 → 130°, other joints stay; replace with taught points |
 | 6 | `PRINTER3` | go to printer 3 |
 | 7 | `SHELVE` | go to the shelf |
 | 9 | `PI_MOVE` | used by `fanuc.py move/jog/goto` |
