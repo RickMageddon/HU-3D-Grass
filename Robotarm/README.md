@@ -102,15 +102,22 @@ Check with `python3 fanuc.py programs` and `python3 fanuc.py alarms` (no `ASBN` 
 
 In **T1** (key switch on the cabinet), on the teach pendant:
 
+0. **First clear any half-finished program: FCTN → 1 ABORT (ALL).** Do this every time,
+   especially after the deadman or SHIFT was released during a move. Otherwise SHIFT+FWD
+   *resumes* the interrupted move (e.g. `PI_MOVE LINE 9`) and the arm drives on to the old
+   target by itself. This happened on 2026-11-25: J1 went to its 170° limit.
 1. Lower the override: **−%** to 10% (top right of the screen).
-2. **SELECT** → `PI_DISP` → **ENTER** (top line shows `PI_DISP LINE 0`).
+2. **SELECT** → `PI_DISP` → **ENTER**. The top line must show **`PI_DISP LINE 0`** (or 1).
+   If it shows another program (`PI_MOVE`, `TEST`, …) or "PAUSED", go back to step 0.
 3. OFF/ON knob → **ON**.
 4. Hold the **deadman switch** halfway in.
 5. **RESET** (Fault lamp goes out).
 6. Hold **SHIFT**, press **FWD** → the Busy/Run lamp lights up.
 7. **Keep holding SHIFT and the deadman.** Release = the arm stops immediately.
 
-`python3 fanuc.py status` should now show `dispatcher: RUNNING`.
+`python3 fanuc.py status` should now show `dispatcher: RUNNING` and `R[100]/R[101]: 0.0 0.0`.
+**Starting `PI_DISP` never moves the arm.** If the arm moves on its own after SHIFT+FWD, let go
+immediately and do step 0.
 
 Without a person at the pendant (the final setup with the Pi): **AUTO** mode, TP OFF, start
 `PI_DISP` once with CYCLE START on the cabinet. Only do this with a working enclosure and
@@ -240,7 +247,8 @@ What we learned:
 |---|---|
 | `error: PI_DISP is not running` | Start `PI_DISP` (see Setup step 3). |
 | `error: PI_DISP is busy` while nothing is running | R[100]/R[101] still has an old number from an interrupted run. Starting `PI_DISP` again resets them. |
-| `PI_DISP stopped while running ...` | Deadman or SHIFT released, E-stop, or an alarm. See `fanuc.py alarms`, RESET, start again. |
+| `PI_DISP stopped while running ...` | Deadman or SHIFT released, E-stop, or an alarm. See `fanuc.py alarms`, then **FCTN → ABORT (ALL)**, RESET, start again. |
+| Arm moves by itself right after SHIFT+FWD | An interrupted move is being resumed. Let go, **FCTN → 1 ABORT (ALL)**, select `PI_DISP` again (top line `PI_DISP LINE 0`). |
 | `SRVO-003 Deadman switch released` | Normal when nobody is holding the deadman. |
 | `timed out` / no connection | Laptop not on 10.0.6.x (`ip -br addr`), cable, or a different controller IP. |
 | Traffic goes over WiFi | No 10.0.6.x address on the Ethernet adapter: `ip route get 10.0.6.10` must show the Ethernet adapter. |
