@@ -1,0 +1,33 @@
+@startuml activity_diagram_robotarm
+start
+repeat
+:Ontvang signaal van printfarmmanager;
+if (type signaal?) then (pauzeer)
+    :robotarm naar veilige modus;
+else (printer klaar)
+    if(is er plek in het gebruikte rek voor deze printer?) then (ja)
+        :beweeg naar printer;
+        :grijp printplaat;
+        :beweeg naar rek gebruikte printplaten;
+        :hang printplaat in het rek op een plaats voor deze printer;
+        :laat printplaat los;
+        :update beschikbare plekken in gebruikte rek;
+        if(is er een schone printplaat voor deze printer?) then (ja)
+            :beweeg naar rek met schone printplaten;
+            :grijp printplaat voor specifieke printer;
+            :beweeg naar printer;
+            :hang schone printplaat in printer;
+            :laat printplaat los;
+            :ga naar veilige plaats;
+            :geef signaal naar printfarmmanager dat nieuwe printplaat hangt;
+            :update beschikbare printplaten voor deze printer;
+        else(nee)
+            :stuur error naar printfarmmanager; 
+            :beweeg terug naar veilige plaats;
+        endif 
+    else(nee)
+        :stuur error naar printfarmmanager;
+        :beweeg terug naar veilige plaats;
+    endif
+endif
+@enduml
