@@ -1,0 +1,11 @@
+@startuml objectmodel_robotarm
+object RobotarmControl
+object Robotarm
+object Gripper
+object CleanRack
+object UsedRack
+RobotarmControl -> Robotarm : moveToTarget(target), handlePlate(action), moveToSafePostition()
+Robotarm -> Gripper: gripPlate(), releasePlate()
+RobotarmControl -down-> CleanRack: getRackSpot(printer), setRackSpotStatus(status)
+RobotarmControl -down-> UsedRack: getRackSpot(printer), setRackSpotStatus(status)
+@enduml
