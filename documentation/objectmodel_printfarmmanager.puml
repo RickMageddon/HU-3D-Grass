@@ -1,0 +1,10 @@
+@startuml objectmodel_printfarmmanager
+object PrintfarmManager
+object PrintQueue
+object Printer
+
+PrintfarmManager --> PrintQueue : addJob(job), getNextJob(), prioritizeJob(job)
+
+PrintfarmManager --> Printer : checkAvailability(), checkResinType(), checkResinLevel(), startPrint(job)
+
+@enduml
