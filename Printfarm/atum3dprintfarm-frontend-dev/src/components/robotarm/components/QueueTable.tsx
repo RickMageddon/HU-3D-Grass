@@ -1,7 +1,9 @@
 import DataTable, { type TableColumn, type TableStyles } from "react-data-table-component";
+import { Trash2 } from "lucide-react";
 import { Card } from "../../ui/card";
 import { BadgeLabel } from "./RobotArmBadges";
 import {
+    describeTask,
     formatDuration,
     priorityConfig,
     priorityRank,
@@ -70,6 +72,81 @@ const queueColumns: TableColumn<QueueRow>[] = [
         cell: (row) => <span className="text-slate-900">{formatDuration(row.item.estimatedDuration)}</span>,
     },
 ];
+
+const armQueueStyles: TableStyles = {
+    table: { style: { backgroundColor: "transparent" } },
+    rows: {
+        style: {
+            minHeight: "64px",
+            fontSize: "14px",
+            backgroundColor: "#f8fafc",
+            border: "1px solid #f1f5f9",
+            borderRadius: "12px",
+            marginBottom: "8px",
+        },
+    },
+};
+
+function describeQueueDetails(row: QueueRow): string {
+    return [
+        row.printer?.name ?? "Geen printer",
+        `${row.item.quantity}×`,
+        formatDuration(row.item.estimatedDuration),
+        `Prioriteit: ${priorityConfig[row.item.priority].label}`,
+    ].join(" · ");
+}
+
+const armQueueColumns: TableColumn<QueueRow>[] = [
+    {
+        name: "#",
+        cell: (_row, index) => <span className="text-slate-400">{index + 1}</span>,
+        width: "56px",
+        center: true,
+    },
+    {
+        name: "Taak",
+        cell: (row) => (
+            <div className="min-w-0 py-2">
+                <div className="text-base text-slate-900">{describeTask(row)}</div>
+                <div className="text-sm text-slate-500">{describeQueueDetails(row)}</div>
+            </div>
+        ),
+        grow: 1,
+    },
+    {
+        name: "Status",
+        cell: (row) => <BadgeLabel badge={queueStatusConfig[row.item.status]} withDot={false} />,
+        width: "140px",
+        right: true,
+    },
+    {
+        name: "Acties",
+        cell: (row) => (
+            <button
+                type="button"
+                aria-label={`Verwijder taak ${row.item.id}`}
+                className="cursor-pointer rounded-md p-2 text-red-600 hover:bg-slate-100"
+            >
+                <Trash2 className="w-4 h-4" />
+            </button>
+        ),
+        width: "64px",
+        center: true,
+    },
+];
+
+export function ArmQueueTable({ rows, emptyText }: QueueTableProps) {
+    return (
+        <DataTable
+            columns={armQueueColumns}
+            data={rows}
+            keyField="id"
+            customStyles={armQueueStyles}
+            noTableHead
+            noDataComponent={<div className="p-6 text-slate-500">{emptyText}</div>}
+        />
+    );
+}
 
 export function QueueTable({ rows, emptyText }: QueueTableProps) {
     return (
